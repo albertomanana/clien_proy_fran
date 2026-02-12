@@ -9,7 +9,7 @@ public class Cliente {
     private String email;
     private String telefono;
     private String direccion;
-    private String fotoUrl;
+    private String fotoPath;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -19,14 +19,14 @@ public class Cliente {
 
     // Constructor con parámetros
     public Cliente(int id, String nombre, String apellidos, String email, String telefono, String direccion,
-            String fotoUrl) {
+            String fotoPath) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.fotoUrl = fotoUrl;
+        this.fotoPath = fotoPath;
     }
 
     // Getters y Setters
@@ -78,12 +78,12 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public String getFotoUrl() {
-        return fotoUrl;
+    public String getFotoPath() {
+        return fotoPath;
     }
 
-    public void setFotoUrl(String fotoUrl) {
-        this.fotoUrl = fotoUrl;
+    public void setFotoPath(String fotoPath) {
+        this.fotoPath = fotoPath;
     }
 
     public Timestamp getCreatedAt() {

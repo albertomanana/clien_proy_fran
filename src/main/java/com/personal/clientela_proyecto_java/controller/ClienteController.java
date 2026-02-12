@@ -6,6 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/clientes")
@@ -34,7 +41,13 @@ public class ClienteController {
 
     // Guardar nuevo cliente
     @PostMapping("/guardar")
-    public String guardarCliente(@ModelAttribute Cliente cliente) {
+    public String guardarCliente(@ModelAttribute Cliente cliente, @RequestParam("fotoFile") MultipartFile fotoFile) {
+        if (fotoFile != null && !fotoFile.isEmpty()) {
+            String fileName = guardarArchivo(fotoFile);
+            if (fileName != null) {
+                cliente.setFotoPath("uploads/" + fileName);
+            }
+        }
         clienteService.guardarCliente(cliente);
         return "redirect:/clientes";
     }
@@ -49,9 +62,52 @@ public class ClienteController {
 
     // Actualizar cliente
     @PostMapping("/actualizar")
-    public String actualizarCliente(@ModelAttribute Cliente cliente) {
+    public String actualizarCliente(@ModelAttribute Cliente cliente, @RequestParam("fotoFile") MultipartFile fotoFile) {
+        Cliente clienteActual = clienteService.obtenerClientePorId(cliente.getId());
+
+        if (fotoFile != null && !fotoFile.isEmpty()) {
+            String fileName = guardarArchivo(fotoFile);
+            if (fileName != null) {
+                cliente.setFotoPath("uploads/" + fileName);
+            }
+        } else {
+            // Si no se sube foto, conservar la anterior
+            cliente.setFotoPath(clienteActual.getFotoPath());
+        }
+
         clienteService.actualizarCliente(cliente);
         return "redirect:/clientes";
+    }
+
+    private String guardarArchivo(MultipartFile file) {
+        try {
+            String uploadDir = "C:/crud_clientes/uploads/";
+            Path uploadPath = Paths.get(uploadDir);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Validar extensión
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+            }
+
+            if (!extension.matches(".(jpg|jpeg|png|webp)")) {
+                return null;
+            }
+
+            String uniqueFileName = UUID.randomUUID().toString() + extension;
+            Path filePath = uploadPath.resolve(uniqueFileName);
+            Files.copy(file.getInputStream(), filePath);
+
+            return uniqueFileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Eliminar cliente

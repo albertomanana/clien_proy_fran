@@ -33,7 +33,7 @@
         <tbody>
             <tr th:each="cliente : ${clientes}">
                 <td>
-                    <img th:src="${cliente.fotoUrl != null && !cliente.fotoUrl.isEmpty() ? cliente.fotoUrl : '/img/placeholder.png'}" 
+                    <img th:src="${cliente.fotoPath != null && !cliente.fotoPath.isEmpty() ? '/' + cliente.fotoPath : '/img/placeholder.png'}" 
                          class="cliente-foto" alt="Foto">
                 </td>
                 <td th:text="${cliente.nombre}">Nombre</td>

@@ -18,14 +18,14 @@ public class ClienteDAOJdbc implements ClienteDAO {
 
     @Override
     public void guardar(Cliente cliente) {
-        String sql = "INSERT INTO clientes (nombre, apellidos, email, telefono, direccion, foto_url) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes (nombre, apellidos, email, telefono, direccion, foto_path) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getApellidos());
             pstmt.setString(3, cliente.getEmail());
             pstmt.setString(4, cliente.getTelefono());
             pstmt.setString(5, cliente.getDireccion());
-            pstmt.setString(6, cliente.getFotoUrl());
+            pstmt.setString(6, cliente.getFotoPath());
             pstmt.executeUpdate();
             System.out.println("✅ Cliente guardado correctamente.");
         } catch (SQLException e) {
@@ -36,14 +36,14 @@ public class ClienteDAOJdbc implements ClienteDAO {
 
     @Override
     public void actualizar(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre = ?, apellidos = ?, email = ?, telefono = ?, direccion = ?, foto_url = ? WHERE id = ?";
+        String sql = "UPDATE clientes SET nombre = ?, apellidos = ?, email = ?, telefono = ?, direccion = ?, foto_path = ? WHERE id = ?";
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getApellidos());
             pstmt.setString(3, cliente.getEmail());
             pstmt.setString(4, cliente.getTelefono());
             pstmt.setString(5, cliente.getDireccion());
-            pstmt.setString(6, cliente.getFotoUrl());
+            pstmt.setString(6, cliente.getFotoPath());
             pstmt.setInt(7, cliente.getId());
             pstmt.executeUpdate();
             System.out.println("✅ Cliente actualizado correctamente.");
@@ -108,7 +108,7 @@ public class ClienteDAOJdbc implements ClienteDAO {
         cliente.setEmail(rs.getString("email"));
         cliente.setTelefono(rs.getString("telefono"));
         cliente.setDireccion(rs.getString("direccion"));
-        cliente.setFotoUrl(rs.getString("foto_url"));
+        cliente.setFotoPath(rs.getString("foto_path"));
         cliente.setCreatedAt(rs.getTimestamp("created_at"));
         cliente.setUpdatedAt(rs.getTimestamp("updated_at"));
         return cliente;
