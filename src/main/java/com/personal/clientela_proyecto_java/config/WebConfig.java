@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
         // Mapear URL /uploads/** a la carpeta física C:/crud_clientes/uploads/
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:C:/crud_clientes/uploads/");
+                .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
 
         // También nos aseguramos de que los recursos estáticos internos funcionen (si
         // los hubiera)

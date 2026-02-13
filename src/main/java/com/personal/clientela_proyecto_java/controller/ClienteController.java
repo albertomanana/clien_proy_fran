@@ -81,7 +81,7 @@ public class ClienteController {
 
     private String guardarArchivo(MultipartFile file) {
         try {
-            String uploadDir = "C:/crud_clientes/uploads/";
+            String uploadDir = System.getProperty("user.dir") + "/uploads/";
             Path uploadPath = Paths.get(uploadDir);
 
             if (!Files.exists(uploadPath)) {
