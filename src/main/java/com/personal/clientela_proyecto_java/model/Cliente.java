@@ -10,6 +10,11 @@ public class Cliente {
     private String telefono;
     private String direccion;
     private String fotoPath;
+    private double pago1;
+    private double pago2;
+    private double pago3;
+    private double pagoFinal;
+    private double balanceTotal;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -19,7 +24,7 @@ public class Cliente {
 
     // Constructor con parámetros
     public Cliente(int id, String nombre, String apellidos, String email, String telefono, String direccion,
-            String fotoPath) {
+            String fotoPath, double pago1, double pago2, double pago3, double pagoFinal) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -27,6 +32,11 @@ public class Cliente {
         this.telefono = telefono;
         this.direccion = direccion;
         this.fotoPath = fotoPath;
+        this.pago1 = pago1;
+        this.pago2 = pago2;
+        this.pago3 = pago3;
+        this.pagoFinal = pagoFinal;
+        this.balanceTotal = calcularBalance();
     }
 
     // Getters y Setters
@@ -84,6 +94,51 @@ public class Cliente {
 
     public void setFotoPath(String fotoPath) {
         this.fotoPath = fotoPath;
+    }
+
+    public double getPago1() {
+        return pago1;
+    }
+
+    public void setPago1(double pago1) {
+        this.pago1 = pago1;
+    }
+
+    public double getPago2() {
+        return pago2;
+    }
+
+    public void setPago2(double pago2) {
+        this.pago2 = pago2;
+    }
+
+    public double getPago3() {
+        return pago3;
+    }
+
+    public void setPago3(double pago3) {
+        this.pago3 = pago3;
+    }
+
+    public double getPagoFinal() {
+        return pagoFinal;
+    }
+
+    public void setPagoFinal(double pagoFinal) {
+        this.pagoFinal = pagoFinal;
+    }
+
+    public double getBalanceTotal() {
+        return balanceTotal;
+    }
+
+    public void setBalanceTotal(double balanceTotal) {
+        this.balanceTotal = balanceTotal;
+    }
+
+    public double calcularBalance() {
+        double promedioPagos = (pago1 + pago2 + pago3) / 3;
+        return (promedioPagos * 0.7) + (pagoFinal * 0.3);
     }
 
     public Timestamp getCreatedAt() {

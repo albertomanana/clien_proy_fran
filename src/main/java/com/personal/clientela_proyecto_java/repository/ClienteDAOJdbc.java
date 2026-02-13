@@ -18,7 +18,7 @@ public class ClienteDAOJdbc implements ClienteDAO {
 
     @Override
     public void guardar(Cliente cliente) {
-        String sql = "INSERT INTO clientes (nombre, apellidos, email, telefono, direccion, foto_path) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes (nombre, apellidos, email, telefono, direccion, foto_path, pago1, pago2, pago3, pago_final, balance_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getApellidos());
@@ -26,6 +26,11 @@ public class ClienteDAOJdbc implements ClienteDAO {
             pstmt.setString(4, cliente.getTelefono());
             pstmt.setString(5, cliente.getDireccion());
             pstmt.setString(6, cliente.getFotoPath());
+            pstmt.setDouble(7, cliente.getPago1());
+            pstmt.setDouble(8, cliente.getPago2());
+            pstmt.setDouble(9, cliente.getPago3());
+            pstmt.setDouble(10, cliente.getPagoFinal());
+            pstmt.setDouble(11, cliente.getBalanceTotal());
             pstmt.executeUpdate();
             System.out.println("✅ Cliente guardado correctamente.");
         } catch (SQLException e) {
@@ -36,7 +41,7 @@ public class ClienteDAOJdbc implements ClienteDAO {
 
     @Override
     public void actualizar(Cliente cliente) {
-        String sql = "UPDATE clientes SET nombre = ?, apellidos = ?, email = ?, telefono = ?, direccion = ?, foto_path = ? WHERE id = ?";
+        String sql = "UPDATE clientes SET nombre = ?, apellidos = ?, email = ?, telefono = ?, direccion = ?, foto_path = ?, pago1 = ?, pago2 = ?, pago3 = ?, pago_final = ?, balance_total = ? WHERE id = ?";
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getApellidos());
@@ -44,7 +49,12 @@ public class ClienteDAOJdbc implements ClienteDAO {
             pstmt.setString(4, cliente.getTelefono());
             pstmt.setString(5, cliente.getDireccion());
             pstmt.setString(6, cliente.getFotoPath());
-            pstmt.setInt(7, cliente.getId());
+            pstmt.setDouble(7, cliente.getPago1());
+            pstmt.setDouble(8, cliente.getPago2());
+            pstmt.setDouble(9, cliente.getPago3());
+            pstmt.setDouble(10, cliente.getPagoFinal());
+            pstmt.setDouble(11, cliente.getBalanceTotal());
+            pstmt.setInt(12, cliente.getId());
             pstmt.executeUpdate();
             System.out.println("✅ Cliente actualizado correctamente.");
         } catch (SQLException e) {
@@ -109,6 +119,11 @@ public class ClienteDAOJdbc implements ClienteDAO {
         cliente.setTelefono(rs.getString("telefono"));
         cliente.setDireccion(rs.getString("direccion"));
         cliente.setFotoPath(rs.getString("foto_path"));
+        cliente.setPago1(rs.getDouble("pago1"));
+        cliente.setPago2(rs.getDouble("pago2"));
+        cliente.setPago3(rs.getDouble("pago3"));
+        cliente.setPagoFinal(rs.getDouble("pago_final"));
+        cliente.setBalanceTotal(rs.getDouble("balance_total"));
         cliente.setCreatedAt(rs.getTimestamp("created_at"));
         cliente.setUpdatedAt(rs.getTimestamp("updated_at"));
         return cliente;

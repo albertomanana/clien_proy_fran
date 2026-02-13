@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Listado de Clientes</title>
@@ -13,6 +14,7 @@
         }
     </style>
 </head>
+
 <body class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Gestión de Clientes</h1>
@@ -27,24 +29,25 @@
                 <th>Apellidos</th>
                 <th>Email</th>
                 <th>Teléfono</th>
+                <th>Balance Total</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="cliente : ${clientes}">
                 <td>
-                    <img th:src="${cliente.fotoPath != null && !cliente.fotoPath.isEmpty() ? '/' + cliente.fotoPath : '/img/placeholder.png'}" 
-                         class="cliente-foto" alt="Foto">
+                    <img th:src="${cliente.fotoPath != null && !cliente.fotoPath.isEmpty() ? '/' + cliente.fotoPath : '/img/placeholder.png'}"
+                        class="cliente-foto" alt="Foto">
                 </td>
                 <td th:text="${cliente.nombre}">Nombre</td>
                 <td th:text="${cliente.apellidos}">Apellidos</td>
                 <td th:text="${cliente.email}">Email</td>
                 <td th:text="${cliente.telefono}">Teléfono</td>
+                <td th:text="${#numbers.formatDecimal(cliente.balanceTotal, 1, 2) + ' €'}">0.00 €</td>
                 <td>
                     <a th:href="@{/clientes/editar/{id}(id=${cliente.id})}" class="btn btn-sm btn-warning">Editar</a>
-                    <a th:href="@{/clientes/eliminar/{id}(id=${cliente.id})}" 
-                       class="btn btn-sm btn-danger" 
-                       onclick="return confirm('¿Estás seguro de eliminar este cliente?')">Eliminar</a>
+                    <a th:href="@{/clientes/eliminar/{id}(id=${cliente.id})}" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Estás seguro de eliminar este cliente?')">Eliminar</a>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(clientes)}">
@@ -53,4 +56,5 @@
         </tbody>
     </table>
 </body>
+
 </html>

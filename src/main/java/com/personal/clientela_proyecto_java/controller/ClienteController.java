@@ -48,6 +48,10 @@ public class ClienteController {
                 cliente.setFotoPath("uploads/" + fileName);
             }
         }
+
+        // Calcular el balance total antes de guardar (mismo peso que el profesor)
+        cliente.setBalanceTotal(cliente.calcularBalance());
+
         clienteService.guardarCliente(cliente);
         return "redirect:/clientes";
     }
@@ -74,6 +78,9 @@ public class ClienteController {
             // Si no se sube foto, conservar la anterior
             cliente.setFotoPath(clienteActual.getFotoPath());
         }
+
+        // Calcular el balance total antes de actualizar
+        cliente.setBalanceTotal(cliente.calcularBalance());
 
         clienteService.actualizarCliente(cliente);
         return "redirect:/clientes";
