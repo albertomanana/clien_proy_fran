@@ -1,0 +1,8 @@
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\ClientelaProyectoJavaApplication.java
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\config\WebConfig.java
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\controller\ClienteController.java
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\model\Cliente.java
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\repository\ClienteDAO.java
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\repository\ClienteDAOJdbc.java
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\repository\Conexion.java
+C:\xampp\htdocs\clientela_proyecto_java\src\main\java\com\personal\clientela_proyecto_java\service\ClienteService.java
