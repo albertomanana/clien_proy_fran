@@ -70,6 +70,10 @@ public class ClienteController {
         Cliente clienteActual = clienteService.obtenerClientePorId(cliente.getId());
 
         if (fotoFile != null && !fotoFile.isEmpty()) {
+            // Si hay una foto nueva, borrar la anterior si existe
+            if (clienteActual.getFotoPath() != null && !clienteActual.getFotoPath().isEmpty()) {
+                borrarArchivoFisico(clienteActual.getFotoPath());
+            }
             String fileName = guardarArchivo(fotoFile);
             if (fileName != null) {
                 cliente.setFotoPath("uploads/" + fileName);
@@ -84,6 +88,31 @@ public class ClienteController {
 
         clienteService.actualizarCliente(cliente);
         return "redirect:/clientes";
+    }
+
+    // Suprimir solo la foto
+    @GetMapping("/eliminar-foto/{id}")
+    public String eliminarFoto(@PathVariable int id) {
+        Cliente cliente = clienteService.obtenerClientePorId(id);
+        if (cliente != null && cliente.getFotoPath() != null && !cliente.getFotoPath().isEmpty()) {
+            borrarArchivoFisico(cliente.getFotoPath());
+            cliente.setFotoPath(null);
+            clienteService.actualizarCliente(cliente);
+        }
+        return "redirect:/clientes/editar/" + id;
+    }
+
+    private void borrarArchivoFisico(String fotoPath) {
+        try {
+            // Eliminar el prefijo "uploads/" para obtener el nombre del archivo si es
+            // necesario
+            // En este caso, el fotoPath es "uploads/filename.ext"
+            String fileName = fotoPath.replace("uploads/", "");
+            Path filePath = Paths.get(System.getProperty("user.dir") + "/uploads/").resolve(fileName);
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String guardarArchivo(MultipartFile file) {
@@ -120,6 +149,10 @@ public class ClienteController {
     // Eliminar cliente
     @GetMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable int id) {
+        Cliente cliente = clienteService.obtenerClientePorId(id);
+        if (cliente != null && cliente.getFotoPath() != null && !cliente.getFotoPath().isEmpty()) {
+            borrarArchivoFisico(cliente.getFotoPath());
+        }
         clienteService.eliminarCliente(id);
         return "redirect:/clientes";
     }

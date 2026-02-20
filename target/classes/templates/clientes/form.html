@@ -152,10 +152,19 @@
             <!-- Foto -->
             <div class="section-title">Foto</div>
             <div class="row align-items-center">
-                <div class="col-auto">
+                <div class="col-auto position-relative">
                     <img id="preview"
                         th:src="${cliente.fotoPath != null && !cliente.fotoPath.isEmpty() ? '/' + cliente.fotoPath : 'https://via.placeholder.com/120?text=Foto'}"
                         class="preview-img" alt="Vista previa">
+                    
+                    <!-- Botón para eliminar foto -->
+                    <a th:if="${cliente.fotoPath != null && !cliente.fotoPath.isEmpty()}" 
+                       th:href="@{/clientes/eliminar-foto/{id}(id=${cliente.id})}" 
+                       class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle shadow-sm"
+                       style="width: 30px; height: 30px; padding: 0.2rem;"
+                       onclick="return confirm('¿Seguro que quieres eliminar la foto?')">
+                        <i class="fas fa-trash-can" style="font-size: 0.8rem;"></i>
+                    </a>
                 </div>
                 <div class="col">
                     <input type="file" name="fotoFile" id="fotoFileInput" class="form-control form-control-sm"
