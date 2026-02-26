@@ -173,6 +173,7 @@
 </head>
 
 <body class="container pb-5">
+    <!-- Contenedor principal de la tarjeta del formulario -->
     <div class="main-card">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h2 class="fw-bold mb-0" th:text="${cliente.id == 0 ? 'Nuevo Cliente' : 'Editar Cliente'}">Cliente</h2>
@@ -188,7 +189,7 @@
             method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}" />
 
-            <!-- Datos -->
+            <!-- Sección de Datos Personales del Cliente -->
             <div class="section-title"><i class="ph ph-user"></i> Datos Personales</div>
             <div class="row g-4">
                 <div class="col-md-6">
@@ -214,7 +215,7 @@
                 </div>
             </div>
 
-            <!-- Pagos -->
+            <!-- Sección de Registro de Pagos -->
             <div class="section-title"><i class="ph ph-currency-circle-dollar"></i> Registro de Pagos</div>
             <div class="economic-box">
                 <div class="row g-3">
@@ -253,7 +254,7 @@
                 </div>
             </div>
 
-            <!-- Foto -->
+            <!-- Sección de Subida y Vista Previa de Fotografía -->
             <div class="section-title"><i class="ph ph-image"></i> Fotografía del Cliente</div>
             <div class="row align-items-center g-4">
                 <div class="col-auto position-relative">

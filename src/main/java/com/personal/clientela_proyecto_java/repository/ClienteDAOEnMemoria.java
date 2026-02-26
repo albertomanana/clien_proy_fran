@@ -9,11 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Implementación en memoria del repositorio de Clientes.
+ * Útil para pruebas o entornos sin base de datos persistente.
+ */
 @Repository
 @Qualifier("clienteDAOEnMemoria")
 public class ClienteDAOEnMemoria implements ClienteDAO {
 
+    // Lista estática para almacenar los clientes en memoria RAM
     private static final List<Cliente> clientes = new ArrayList<>();
+    // Generador atómico de IDs para asegurar unicidad (thread-safe)
     private static final AtomicInteger NEXT_ID = new AtomicInteger(1);
 
     static {
@@ -57,15 +63,18 @@ public class ClienteDAOEnMemoria implements ClienteDAO {
         for (int i = 0; i < clientes.size(); i++) {
             Cliente c = clientes.get(i);
             if (c.getId() == cliente.getId()) {
-                // Mantener fotoPath si el nuevo viene null o vacío
+                // Mantener foto original si no se proporciona una nueva
                 if (cliente.getFotoPath() == null || cliente.getFotoPath().isEmpty()) {
                     cliente.setFotoPath(c.getFotoPath());
                 }
-                cliente.setCreatedAt(c.getCreatedAt()); // Mantener fecha creación
+
+                // Conservar fecha de creación original y actualizar fecha de modificación
+                cliente.setCreatedAt(c.getCreatedAt());
                 cliente.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
                 cliente.setBalanceTotal(cliente.calcularBalance());
+
                 clientes.set(i, cliente);
-                return;
+                return; // Salir una vez encontrado y actualizado
             }
         }
     }

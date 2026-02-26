@@ -14,6 +14,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+/**
+ * Controlador principal para gestionar las peticiones web relacionadas con los
+ * Clientes.
+ * Maneja el enrutamiento y las respuestas a las vistas de Thymeleaf.
+ */
 @Controller
 @RequestMapping("/clientes")
 public class ClienteController {
@@ -25,21 +30,28 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    // Listar todos los clientes
+    /**
+     * Muestra la vista principal con el listado de todos los clientes.
+     */
     @GetMapping({ "", "/" })
     public String listarClientes(Model model) {
         model.addAttribute("clientes", clienteService.listarTodosLosClientes());
         return "clientes/index";
     }
 
-    // Mostrar formulario para nuevo cliente
+    /**
+     * Muestra el formulario vacío para crear un nuevo cliente.
+     */
     @GetMapping("/nuevo")
     public String mostrarFormulario(Model model) {
         model.addAttribute("cliente", new Cliente());
         return "clientes/form";
     }
 
-    // Guardar nuevo cliente
+    /**
+     * Procesa y guarda un nuevo cliente en el sistema.
+     * También gestiona la subida de un archivo de fotografía si se proporciona.
+     */
     @PostMapping("/guardar")
     public String guardarCliente(@ModelAttribute Cliente cliente, @RequestParam("fotoFile") MultipartFile fotoFile) {
         if (fotoFile != null && !fotoFile.isEmpty()) {
@@ -56,7 +68,9 @@ public class ClienteController {
         return "redirect:/clientes";
     }
 
-    // Mostrar formulario para editar
+    /**
+     * Muestra el formulario pre-cargado con los datos del cliente a editar.
+     */
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable int id, Model model) {
         Cliente cliente = clienteService.obtenerClientePorId(id);
@@ -64,7 +78,10 @@ public class ClienteController {
         return "clientes/form";
     }
 
-    // Actualizar cliente
+    /**
+     * Procesa la actualización de los datos de un cliente existente.
+     * Mantiene la foto anterior si no se sube una nueva.
+     */
     @PostMapping("/actualizar")
     public String actualizarCliente(@ModelAttribute Cliente cliente, @RequestParam("fotoFile") MultipartFile fotoFile) {
         Cliente clienteActual = clienteService.obtenerClientePorId(cliente.getId());
@@ -90,7 +107,9 @@ public class ClienteController {
         return "redirect:/clientes";
     }
 
-    // Suprimir solo la foto
+    /**
+     * Elimina únicamente la foto de perfil de un cliente, sin borrar al cliente.
+     */
     @GetMapping("/eliminar-foto/{id}")
     public String eliminarFoto(@PathVariable int id) {
         Cliente cliente = clienteService.obtenerClientePorId(id);
@@ -102,6 +121,11 @@ public class ClienteController {
         return "redirect:/clientes/editar/" + id;
     }
 
+    /**
+     * Método auxiliar para eliminar físicamente un archivo de imagen del servidor.
+     * 
+     * @param fotoPath Ruta relativa de la foto a borrar (ej. uploads/archivo.jpg).
+     */
     private void borrarArchivoFisico(String fotoPath) {
         try {
             // Eliminar el prefijo "uploads/" para obtener el nombre del archivo si es
@@ -115,6 +139,13 @@ public class ClienteController {
         }
     }
 
+    /**
+     * Método auxiliar para guardar un archivo subido en el directorio local de
+     * 'uploads'.
+     * 
+     * @param file El archivo multipart recibido del formulario.
+     * @return El nombre único del archivo guardado, o null si falla o no es válido.
+     */
     private String guardarArchivo(MultipartFile file) {
         try {
             String uploadDir = System.getProperty("user.dir") + "/uploads/";
@@ -146,7 +177,9 @@ public class ClienteController {
         }
     }
 
-    // Eliminar cliente
+    /**
+     * Elimina permanentemente a un cliente y su foto asociada del sistema.
+     */
     @GetMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable int id) {
         Cliente cliente = clienteService.obtenerClientePorId(id);

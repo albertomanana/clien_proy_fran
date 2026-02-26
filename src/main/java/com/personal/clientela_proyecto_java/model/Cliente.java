@@ -18,11 +18,15 @@ public class Cliente {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    // Constructor vacío
+    /**
+     * Constructor vacío necesario para Spring (por ejemplo, al mapear formularios).
+     */
     public Cliente() {
     }
 
-    // Constructor con parámetros
+    /**
+     * Constructor con todos los campos necesarios para inicializar un cliente.
+     */
     public Cliente(int id, String nombre, String apellidos, String email, String telefono, String direccion,
             String fotoPath, double pago1, double pago2, double pago3, double pagoFinal) {
         this.id = id;
@@ -136,9 +140,14 @@ public class Cliente {
         this.balanceTotal = balanceTotal;
     }
 
+    /**
+     * Calcula el balance total aplicando un peso del 70%
+     * al promedio de los 3 primeros pagos y un 30% al pago final.
+     * 
+     * @return El balance total calculado.
+     */
     public double calcularBalance() {
-        double promedioPagos = (pago1 + pago2 + pago3) / 3;
-        return (promedioPagos * 0.7) + (pagoFinal * 0.3);
+        return (((pago1 + pago2 + pago3) / 3) * 0.7) + (pagoFinal * 0.3);
     }
 
     public Timestamp getCreatedAt() {
