@@ -19,7 +19,7 @@ public class ClienteService {
     private final ClienteDAO clienteDAO;
 
     @Autowired
-    public ClienteService(@Qualifier("clienteDAOEnMemoria") ClienteDAO clienteDAO) {
+    public ClienteService(@Qualifier("clienteDAOJdbc") ClienteDAO clienteDAO) {
         this.clienteDAO = clienteDAO;
     }
 
