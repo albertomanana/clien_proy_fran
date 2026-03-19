@@ -2,6 +2,7 @@ package com.personal.clientela_proyecto_java.controller;
 
 import com.personal.clientela_proyecto_java.model.Cliente;
 import com.personal.clientela_proyecto_java.service.ClienteService;
+import com.personal.clientela_proyecto_java.service.TipoClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,10 +25,12 @@ import java.util.UUID;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final TipoClienteService tipoClienteService;
 
     @Autowired
-    public ClienteController(ClienteService clienteService) {
+    public ClienteController(ClienteService clienteService, TipoClienteService tipoClienteService) {
         this.clienteService = clienteService;
+        this.tipoClienteService = tipoClienteService;
     }
 
     /**
@@ -36,6 +39,7 @@ public class ClienteController {
     @GetMapping({ "", "/" })
     public String listarClientes(Model model) {
         model.addAttribute("clientes", clienteService.listarTodosLosClientes());
+        cargarTiposCliente(model);
         return "clientes/index";
     }
 
@@ -44,7 +48,10 @@ public class ClienteController {
      */
     @GetMapping("/nuevo")
     public String mostrarFormulario(Model model) {
-        model.addAttribute("cliente", new Cliente());
+        Cliente cliente = new Cliente();
+        cliente.setTipoClienteId(1);
+        model.addAttribute("cliente", cliente);
+        cargarTiposCliente(model);
         return "clientes/form";
     }
 
@@ -54,6 +61,10 @@ public class ClienteController {
      */
     @PostMapping("/guardar")
     public String guardarCliente(@ModelAttribute Cliente cliente, @RequestParam("fotoFile") MultipartFile fotoFile) {
+        if (cliente.getTipoClienteId() <= 0) {
+            cliente.setTipoClienteId(1);
+        }
+
         if (fotoFile != null && !fotoFile.isEmpty()) {
             String fileName = guardarArchivo(fotoFile);
             if (fileName != null) {
@@ -75,6 +86,7 @@ public class ClienteController {
     public String mostrarFormularioEditar(@PathVariable int id, Model model) {
         Cliente cliente = clienteService.obtenerClientePorId(id);
         model.addAttribute("cliente", cliente);
+        cargarTiposCliente(model);
         return "clientes/form";
     }
 
@@ -85,6 +97,9 @@ public class ClienteController {
     @PostMapping("/actualizar")
     public String actualizarCliente(@ModelAttribute Cliente cliente, @RequestParam("fotoFile") MultipartFile fotoFile) {
         Cliente clienteActual = clienteService.obtenerClientePorId(cliente.getId());
+        if (cliente.getTipoClienteId() <= 0) {
+            cliente.setTipoClienteId(clienteActual.getTipoClienteId() > 0 ? clienteActual.getTipoClienteId() : 1);
+        }
 
         if (fotoFile != null && !fotoFile.isEmpty()) {
             // Si hay una foto nueva, borrar la anterior si existe
@@ -105,6 +120,10 @@ public class ClienteController {
 
         clienteService.actualizarCliente(cliente);
         return "redirect:/clientes";
+    }
+
+    private void cargarTiposCliente(Model model) {
+        model.addAttribute("tiposCliente", tipoClienteService.listarTiposCliente());
     }
 
     /**

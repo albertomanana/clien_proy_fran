@@ -10,6 +10,8 @@ public class Cliente {
     private String telefono;
     private String direccion;
     private String fotoPath;
+    private int tipoClienteId;
+    private String tipoClienteNombre;
     private double pago1;
     private double pago2;
     private double pago3;
@@ -36,6 +38,7 @@ public class Cliente {
         this.telefono = telefono;
         this.direccion = direccion;
         this.fotoPath = fotoPath;
+        this.tipoClienteId = 1;
         this.pago1 = pago1;
         this.pago2 = pago2;
         this.pago3 = pago3;
@@ -98,6 +101,22 @@ public class Cliente {
 
     public void setFotoPath(String fotoPath) {
         this.fotoPath = fotoPath;
+    }
+
+    public int getTipoClienteId() {
+        return tipoClienteId;
+    }
+
+    public void setTipoClienteId(int tipoClienteId) {
+        this.tipoClienteId = tipoClienteId;
+    }
+
+    public String getTipoClienteNombre() {
+        return tipoClienteNombre;
+    }
+
+    public void setTipoClienteNombre(String tipoClienteNombre) {
+        this.tipoClienteNombre = tipoClienteNombre;
     }
 
     public double getPago1() {

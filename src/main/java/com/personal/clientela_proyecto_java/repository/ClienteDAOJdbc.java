@@ -22,8 +22,8 @@ public class ClienteDAOJdbc implements ClienteDAO {
     @Override
     public void guardar(Cliente cliente) {
         String sql =
-                "INSERT INTO clientes (nombre, apellidos, email, telefono, direccion, foto_path, pago1, pago2, pago3, pago_final, balance_total) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "INSERT INTO clientes (nombre, apellidos, email, telefono, direccion, foto_path, tipo_cliente_id, pago1, pago2, pago3, pago_final, balance_total) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getApellidos());
@@ -31,11 +31,12 @@ public class ClienteDAOJdbc implements ClienteDAO {
             pstmt.setString(4, cliente.getTelefono());
             pstmt.setString(5, cliente.getDireccion());
             pstmt.setString(6, cliente.getFotoPath());
-            pstmt.setDouble(7, cliente.getPago1());
-            pstmt.setDouble(8, cliente.getPago2());
-            pstmt.setDouble(9, cliente.getPago3());
-            pstmt.setDouble(10, cliente.getPagoFinal());
-            pstmt.setDouble(11, cliente.getBalanceTotal());
+            pstmt.setInt(7, cliente.getTipoClienteId());
+            pstmt.setDouble(8, cliente.getPago1());
+            pstmt.setDouble(9, cliente.getPago2());
+            pstmt.setDouble(10, cliente.getPago3());
+            pstmt.setDouble(11, cliente.getPagoFinal());
+            pstmt.setDouble(12, cliente.getBalanceTotal());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error al guardar el cliente.");
@@ -46,7 +47,7 @@ public class ClienteDAOJdbc implements ClienteDAO {
     @Override
     public void actualizar(Cliente cliente) {
         String sql =
-                "UPDATE clientes SET nombre = ?, apellidos = ?, email = ?, telefono = ?, direccion = ?, foto_path = ?, pago1 = ?, pago2 = ?, pago3 = ?, pago_final = ?, balance_total = ? WHERE id = ?";
+                "UPDATE clientes SET nombre = ?, apellidos = ?, email = ?, telefono = ?, direccion = ?, foto_path = ?, tipo_cliente_id = ?, pago1 = ?, pago2 = ?, pago3 = ?, pago_final = ?, balance_total = ? WHERE id = ?";
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getApellidos());
@@ -54,12 +55,13 @@ public class ClienteDAOJdbc implements ClienteDAO {
             pstmt.setString(4, cliente.getTelefono());
             pstmt.setString(5, cliente.getDireccion());
             pstmt.setString(6, cliente.getFotoPath());
-            pstmt.setDouble(7, cliente.getPago1());
-            pstmt.setDouble(8, cliente.getPago2());
-            pstmt.setDouble(9, cliente.getPago3());
-            pstmt.setDouble(10, cliente.getPagoFinal());
-            pstmt.setDouble(11, cliente.getBalanceTotal());
-            pstmt.setInt(12, cliente.getId());
+            pstmt.setInt(7, cliente.getTipoClienteId());
+            pstmt.setDouble(8, cliente.getPago1());
+            pstmt.setDouble(9, cliente.getPago2());
+            pstmt.setDouble(10, cliente.getPago3());
+            pstmt.setDouble(11, cliente.getPagoFinal());
+            pstmt.setDouble(12, cliente.getBalanceTotal());
+            pstmt.setInt(13, cliente.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error al actualizar el cliente.");
@@ -81,7 +83,8 @@ public class ClienteDAOJdbc implements ClienteDAO {
 
     @Override
     public Cliente obtenerPorId(int id) {
-        String sql = "SELECT * FROM clientes WHERE id = ?";
+        String sql =
+                "SELECT c.*, tc.nombre AS tipo_cliente_nombre FROM clientes c LEFT JOIN tipo_cliente tc ON tc.id = c.tipo_cliente_id WHERE c.id = ?";
         Cliente cliente = null;
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -100,7 +103,8 @@ public class ClienteDAOJdbc implements ClienteDAO {
     @Override
     public List<Cliente> listarTodos() {
         List<Cliente> clientes = new ArrayList<>();
-        String sql = "SELECT * FROM clientes ORDER BY created_at DESC";
+        String sql =
+                "SELECT c.*, tc.nombre AS tipo_cliente_nombre FROM clientes c LEFT JOIN tipo_cliente tc ON tc.id = c.tipo_cliente_id ORDER BY c.created_at DESC";
         try (PreparedStatement pstmt = getConnection().prepareStatement(sql);
                 ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
@@ -122,6 +126,8 @@ public class ClienteDAOJdbc implements ClienteDAO {
         cliente.setTelefono(rs.getString("telefono"));
         cliente.setDireccion(rs.getString("direccion"));
         cliente.setFotoPath(rs.getString("foto_path"));
+        cliente.setTipoClienteId(rs.getInt("tipo_cliente_id"));
+        cliente.setTipoClienteNombre(rs.getString("tipo_cliente_nombre"));
         cliente.setPago1(rs.getDouble("pago1"));
         cliente.setPago2(rs.getDouble("pago2"));
         cliente.setPago3(rs.getDouble("pago3"));
